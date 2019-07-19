@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile group: 'com.google.guava', name: 'guava', version: '27.0.1-jre'
+    compile "org.bouncycastle:bcprov-jdk15on:1.55"
+    compile("io.netty:netty-all:${netty_version}")
+
+}

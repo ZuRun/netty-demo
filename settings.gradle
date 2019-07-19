@@ -1,0 +1,5 @@
+rootProject.name = 'mock-netty'
+
+include 'mock-common'
+include 'mock-client'
+include 'mock-server'
