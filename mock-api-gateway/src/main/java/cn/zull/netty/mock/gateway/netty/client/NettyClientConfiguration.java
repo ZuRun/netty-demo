@@ -1,5 +1,6 @@
 package cn.zull.netty.mock.gateway.netty.client;
 
+import cn.zull.netty.mock.gateway.netty.HttpContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -11,6 +12,7 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseDecoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +23,10 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 public class NettyClientConfiguration {
+
+    @Autowired
+    HttpContext httpContext;
+
     @Bean
     public Bootstrap clientBootStrap() {
         Bootstrap bootstrap = new Bootstrap();
@@ -34,7 +40,7 @@ public class NettyClientConfiguration {
                                 .addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE))
                                 .addLast("decoder", new HttpResponseDecoder())
                                 .addLast("encoder", new HttpRequestDecoder())
-                                .addLast(new NettyHttpClientHandler());
+                                .addLast(new NettyHttpClientHandler(httpContext));
                     }
                 });
         return bootstrap;

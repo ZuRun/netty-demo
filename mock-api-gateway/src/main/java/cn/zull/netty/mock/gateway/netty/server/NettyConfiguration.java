@@ -1,6 +1,7 @@
 package cn.zull.netty.mock.gateway.netty.server;
 
 
+import cn.zull.netty.mock.gateway.netty.HttpContext;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -12,6 +13,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,9 @@ public class NettyConfiguration {
     private int workerCount;
     @Value("${mock.netty.server.port}")
     private int port;
+
+    @Autowired
+    HttpContext httpContext;
 
     /**
      * 服务端bootstrap
@@ -55,7 +60,7 @@ public class NettyConfiguration {
                         int maxContentLength = 2000;
                         // HTTP 消息的合并处理
                         p.addLast(new HttpObjectAggregator(maxContentLength * 1024));
-                        p.addLast(new MockServerHandler());
+                        p.addLast(new MockServerHandler(httpContext));
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)

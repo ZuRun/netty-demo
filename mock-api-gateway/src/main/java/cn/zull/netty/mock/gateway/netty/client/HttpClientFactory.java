@@ -3,6 +3,7 @@ package cn.zull.netty.mock.gateway.netty.client;
 import cn.zull.netty.mock.common.util.SpringApplicationContext;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpClientFactory {
 
+
+    public ChannelFuture send(DefaultFullHttpRequest defaultFullHttpRequest) {
+        ChannelFuture channelFuture = newClient("127.0.0.1", 8080);
+        channelFuture.channel().writeAndFlush(defaultFullHttpRequest);
+        return channelFuture;
+    }
+
     /**
      * new一个新客户端
      *
@@ -21,7 +29,7 @@ public class HttpClientFactory {
      * @param port
      * @return
      */
-    public ChannelFuture newClient(String ip, int port) {
+    private ChannelFuture newClient(String ip, int port) {
         try {
             ChannelFuture serverChannelFuture = SpringApplicationContext
                     .getBean("clientBootStrap", Bootstrap.class)

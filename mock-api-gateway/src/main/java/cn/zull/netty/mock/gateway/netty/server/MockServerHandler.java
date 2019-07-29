@@ -1,5 +1,6 @@
 package cn.zull.netty.mock.gateway.netty.server;
 
+import cn.zull.netty.mock.gateway.netty.HttpContext;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -23,6 +24,7 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
      * 链接数
      */
     public static final AtomicInteger CONNECTIONS = new AtomicInteger();
+    private final HttpContext httpContext;
 
     static {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
@@ -30,6 +32,9 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
         }, 0, 2, TimeUnit.SECONDS);
     }
 
+    public MockServerHandler(HttpContext httpContext) {
+        this.httpContext = httpContext;
+    }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -62,7 +67,7 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
 //                ctx.write(response);
 //                ctx.flush();
 
-                response(ctx, httpRequest);
+                httpContext.execute(ctx, httpRequest,content);
             }
 
 

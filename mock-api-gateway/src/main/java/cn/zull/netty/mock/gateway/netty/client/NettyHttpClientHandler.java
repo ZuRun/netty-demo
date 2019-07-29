@@ -1,7 +1,10 @@
 package cn.zull.netty.mock.gateway.netty.client;
 
+import cn.zull.netty.mock.gateway.netty.HttpContext;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
@@ -17,6 +20,11 @@ public class NettyHttpClientHandler extends ChannelInboundHandlerAdapter {
      * 建立的链接
      */
     public static final AtomicInteger CONNECTIONS = new AtomicInteger(0);
+    private final HttpContext httpContext;
+
+    public NettyHttpClientHandler(HttpContext httpContext) {
+        this.httpContext = httpContext;
+    }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -36,13 +44,13 @@ public class NettyHttpClientHandler extends ChannelInboundHandlerAdapter {
             final String channelId = ctx.channel().id().asShortText();
             MDC.put("traceId", channelId);
 
-            log.info("[read] channelId:{} ip:{} msg:{}", channelId, ctx.channel().remoteAddress(), msg);
-            if (!(msg instanceof String)) {
-                log.warn("消息体格式不合法，请检查.");
-                return;
+            log.info("[接受到返回消息] channelId:{} ip:{} msg:{}", channelId, ctx.channel().remoteAddress(), msg);
+            if (msg instanceof HttpResponse && msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                HttpResponse httpResponse = (HttpResponse) msg;
+                httpContext.resp(ctx.channel(), httpResponse, content);
+
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
