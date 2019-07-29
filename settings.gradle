@@ -1,4 +1,4 @@
-rootProject.name = 'mock-netty'
+rootProject.name = 'netty-mock'
 
 include 'mock-common'
 include 'mock-client'
