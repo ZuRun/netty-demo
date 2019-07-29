@@ -26,7 +26,14 @@ public class HttpContext {
     private final Map<Channel, ChannelHandlerContext> mapping = new ConcurrentHashMap<>(1 << 10);
 
     public void execute(ChannelHandlerContext ctx, HttpRequest httpRequest, HttpContent content) {
-        DefaultFullHttpRequest defaultFullHttpRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, httpRequest.method(), httpRequest.uri(), content.content());
+//        httpRequest.headers().set(HttpHeaderNames.HOST, "localhost:8080");
+//        httpRequest.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderNames.CONNECTION);
+
+        DefaultFullHttpRequest defaultFullHttpRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1,
+                httpRequest.method(), httpRequest.uri(), content.content());
+        System.out.println(defaultFullHttpRequest);
+
+        defaultFullHttpRequest.headers().setAll(httpRequest.headers());
         ChannelFuture channelFuture = factory.send(defaultFullHttpRequest);
 
         change(ctx, channelFuture.channel());

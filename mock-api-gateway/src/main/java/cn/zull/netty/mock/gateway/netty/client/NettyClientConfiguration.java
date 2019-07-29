@@ -9,8 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseDecoder;
+import io.netty.handler.codec.http.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,14 +31,25 @@ public class NettyClientConfiguration {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(new NioEventLoopGroup())
                 .channel(NioSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+
+//                .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) {
                         ChannelPipeline p = ch.pipeline()
-                                .addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE))
-                                .addLast("decoder", new HttpResponseDecoder())
-                                .addLast("encoder", new HttpRequestDecoder())
+//                                .addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE))
+//                        .addLast(new HttpRequestEncoder())//客户端对发送的httpRequest进行编码
+//                       .addLast(new HttpResponseDecoder())//客户端需要对服务端返回的httpresopnse解码
+                                .addLast(new HttpClientCodec())//HttpClientCodec()包含了上面两种
+                                //聚合
+                                .addLast(new HttpObjectAggregator(1024 * 10 * 1024))
+
+                                //解压
+                                .addLast(new HttpContentDecompressor())
+
+//                                .addLast("decoder", new HttpResponseDecoder())
+//                                .addLast("encoder", new HttpRequestEncoder())
                                 .addLast(new NettyHttpClientHandler(httpContext));
                     }
                 });

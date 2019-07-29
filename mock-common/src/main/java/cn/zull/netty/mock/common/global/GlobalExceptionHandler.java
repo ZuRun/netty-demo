@@ -122,6 +122,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ServletException.class)
     public ResponseEntity<Result> handlerException(ServletException e) {
+        log.warn("[全局捕获400] eName:{} msg:{}", e.getClass().getSimpleName(), e.getMessage());
         HttpHeaders headers = createHeaders();
         return new ResponseEntity<>(Result.fail(400, "请求错误！").addResult(e.getMessage()), headers, HttpStatus.BAD_REQUEST);
     }

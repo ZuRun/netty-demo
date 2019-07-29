@@ -44,15 +44,20 @@ public class NettyHttpClientHandler extends ChannelInboundHandlerAdapter {
             final String channelId = ctx.channel().id().asShortText();
             MDC.put("traceId", channelId);
 
-            log.info("[接受到返回消息] channelId:{} ip:{} msg:{}", channelId, ctx.channel().remoteAddress(), msg);
-            if (msg instanceof HttpResponse && msg instanceof HttpContent) {
-                HttpContent content = (HttpContent) msg;
+            log.info("[接受到返回消息] channelId:{} ip:{}", channelId, ctx.channel().remoteAddress());
+            if (msg instanceof HttpResponse) {
                 HttpResponse httpResponse = (HttpResponse) msg;
-                httpContext.resp(ctx.channel(), httpResponse, content);
+                int httpStatusCode = httpResponse.status().code();
+                if (msg instanceof HttpContent) {
+                    HttpContent content = (HttpContent) msg;
+                    httpContext.resp(ctx.channel(), httpResponse, content);
 
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            ctx.close();
         }
 
     }
@@ -78,7 +83,6 @@ public class NettyHttpClientHandler extends ChannelInboundHandlerAdapter {
         log.warn("[通道断开] 剩余连接数:{} channelId:{}", CONNECTIONS.decrementAndGet(), channelId);
         super.channelInactive(ctx);
 
-        //TODO-zurun 从nettyClients中删除
     }
 
 }

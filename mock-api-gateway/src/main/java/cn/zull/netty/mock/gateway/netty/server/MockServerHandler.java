@@ -51,7 +51,7 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
             final String channelId = ctx.channel().id().asShortText();
-            log.info("[read] channelId:{} ip:{} local:{} msg:{}", channelId, ctx.channel().remoteAddress(), ctx.channel().localAddress(), msg);
+            log.info("[read] channelId:{} ip:{} local:{}", channelId, ctx.channel().remoteAddress(), ctx.channel().localAddress());
             if (msg instanceof HttpRequest && msg instanceof HttpContent) {
                 HttpContent content = (HttpContent) msg;
                 HttpRequest httpRequest = (HttpRequest) msg;
@@ -67,7 +67,7 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
 //                ctx.write(response);
 //                ctx.flush();
 
-                httpContext.execute(ctx, httpRequest,content);
+                httpContext.execute(ctx, httpRequest, content);
             }
 
 
