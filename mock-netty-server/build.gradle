@@ -1,0 +1,43 @@
+// 开启springboot默认打包方式(可运行jar)
+//apply plugin: 'org.springframework.boot'
+//jar {
+//    manifest {
+//        attributes 'Main-Class': 'com.iflytek.hy.cop.RestApplication'
+//    }
+//}
+
+dependencies {
+    compile project(':mock-common')
+    compile("io.netty:netty-all:${netty_version}")
+
+}
+
+
+
+// 打包成zip,使用脚本启动方式
+task('copyConf', type: Copy) {
+    from 'src/main/resources/common'
+    from "src/main/resources/${getProperty('package.environment')}"
+    into "build/zip/${project.name}/conf"
+}
+
+task('copyDependencies', type: Copy) {
+    from 'build/libs'
+    from configurations.compile
+    into "build/zip/${project.name}/lib"
+}
+
+task('copyBin', type: Copy) {
+    from 'src/bin'
+    into "build/zip/${project.name}/bin"
+}
+
+task('packageZip', type: Zip) {
+    from "build/zip"
+    archiveName "${project.name}.zip"
+    destinationDir file("$buildDir/../../build/zip")
+    mustRunAfter('clean')
+    dependsOn('clean', 'copyConf', 'copyDependencies', 'copyBin')
+}
+// build结束后,执行打包zip
+build.dependsOn(packageZip)
