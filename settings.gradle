@@ -1,6 +1,8 @@
 rootProject.name = 'netty-mock'
 
 include 'mock-common'
-include 'mock-client'
-include 'mock-server'
+include 'mock-netty-client'
+include 'mock-netty-server'
 include 'mock-api-gateway'
+// http服务器
+include 'mock-tomcat-server'

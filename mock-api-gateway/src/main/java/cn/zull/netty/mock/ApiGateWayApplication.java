@@ -1,7 +1,8 @@
 package cn.zull.netty.mock;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 /**
  * @author zurun
@@ -10,6 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ApiGateWayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ApiGateWayApplication.class, args);
+        // 不启动web服务
+        // SpringApplication.run(ApiGateWayApplication.class, args)
+        new SpringApplicationBuilder(ApiGateWayApplication.class)
+                .web(WebApplicationType.NONE)
+                .run(args);
     }
 }
