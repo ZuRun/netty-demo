@@ -25,6 +25,7 @@ ext {
     zookeeper_version = '3.4.6'
     zkclient_version = '0.1'
     jedis_version = '2.9.0'
+    dubbo_version = '0.2.0'
 }
 
 allprojects {

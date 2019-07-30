@@ -8,7 +8,12 @@
 
 dependencies {
     compile project(':mock-common')
-
+    compile "com.alibaba.boot:dubbo-spring-boot-starter:${dubbo_version}"
+    // dubbo序列化方式用kryo
+    compile "de.javakaffee:kryo-serializers:${kryo_version}"
+    // zk
+    compile "com.github.sgroschupf:zkclient:${zkclient_version}"
+    compile "org.apache.zookeeper:zookeeper:${zookeeper_version}"
 }
 
 
