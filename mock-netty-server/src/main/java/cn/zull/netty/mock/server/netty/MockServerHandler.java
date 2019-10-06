@@ -72,7 +72,7 @@ public class MockServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.warn("[通道断开] channelId:{} 剩余连接数:{}", ctx.channel().id(), CONNECTIONS.decrementAndGet());
+        log.info("[通道断开] channelId:{} 剩余连接数:{}", ctx.channel().id(), CONNECTIONS.decrementAndGet());
 
         super.channelInactive(ctx);
 

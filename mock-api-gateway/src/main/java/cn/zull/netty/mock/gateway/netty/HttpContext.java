@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class HttpContext {
     @Autowired
     HttpClientFactory factory;
-    @Autowired
-    DubboContext dubboContext;
+//    @Autowired
+//    DubboContext dubboContext;
 
     private final Map<Channel, ChannelHandlerContext> mapping = new ConcurrentHashMap<>(1 << 10);
 
@@ -41,7 +41,7 @@ public class HttpContext {
 
         change(ctx, channelFuture.channel());
 
-        dubboContext.dubbo();
+//        dubboContext.dubbo();
     }
 
     public void change(ChannelHandlerContext ctx, Channel respChannel) {

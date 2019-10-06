@@ -80,7 +80,7 @@ public class NettyHttpClientHandler extends ChannelInboundHandlerAdapter {
         final String channelId = ctx.channel().id().asShortText();
         MDC.put("traceId", channelId);
 
-        log.warn("[通道断开] 剩余连接数:{} channelId:{}", CONNECTIONS.decrementAndGet(), channelId);
+        log.info("[通道断开] 剩余连接数:{} channelId:{}", CONNECTIONS.decrementAndGet(), channelId);
         super.channelInactive(ctx);
 
     }
